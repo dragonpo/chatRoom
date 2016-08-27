@@ -1,6 +1,5 @@
 package org.dajicraft;
 
-import java.awt.Robot;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -8,6 +7,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
 import java.net.SocketException;
+import java.net.SocketTimeoutException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -24,6 +24,7 @@ public class Server {
 	public static void removeUser(User user) {
 		users.remove(user);
 	}
+	
 	
 	
 	
@@ -69,11 +70,6 @@ public class Server {
 					String timeStamp = new SimpleDateFormat(
 							"HH:mm::ss").format(new Date());
 					
-					/*
-					 * in and out are the input and output
-					 * of this temp account
-					 */
-					
 					
 					in = new BufferedReader(new InputStreamReader(sock.getInputStream()));
 					out = new BufferedWriter(new OutputStreamWriter(sock.getOutputStream()));
@@ -81,36 +77,55 @@ public class Server {
 					 * reading the client info needs to be changed with a time out and
 					 * a full info read instead of this trash that is only for developement
 					 */
-					String line;
-					
-					char c;
-					int a = in.read();
-					while(a != -1) {
-						c = (char)a;
-						System.out.print(c);
-						a = in.read();
-					}
 					
 					
-					/* 
-					 * Checks for network side cloning needs to be removed
+					
+					/*
+					 * Reading the joining information
+					 * Packet
 					 */
-					for(User user: users) {
-						if(user.getSocket().getInetAddress().equals(sock.getInetAddress()) && 
-								user.getName().equals(username)) {
-							System.out.println(username+" attempted to clone themself");
+					sock.setSoTimeout(3000);
+					try {
+						String line;
+						while((line = in.readLine()) != null) {
+							try {
+								if(line.substring(0, "un: ".length()).equals("un: ")) {
+									username = line.substring("un: ".length(), line.length());
+								} else if(line.substring(0, "r: ".length()).equals("r: ")) {
+									room = line.substring("r: ".length(), line.length());
+								} else if(line.substring(0, "oc: ".length()).equals("oc: ")) {
+									opCode = line.substring("oc: ".length(), line.length());
+								}
+								if(username != null && room != null && opCode != null) break;
+							} catch(StringIndexOutOfBoundsException e) {
+								
+							}
+						}
+					} catch(SocketTimeoutException e) {
+						if(username == null || room == null || opCode == null) {
+							System.out.println(sock.getInetAddress().toString().substring(1,
+									sock.getInetAddress().toString().length())+" has waited to long dropping connection");
 							sock.close();
-							System.out.println(username+" has left");
 							return;
 						}
 					}
 					
-					// Getting SysOp code if any
-					opCode = in.readLine();
+					
+					if(username == null || room == null || opCode == null) {
+						System.out.println(sock.getInetAddress().toString().substring(1,
+								sock.getInetAddress().toString().length())+" tried to join with a malformed packet");
+						sock.close();
+						return;
+					}
 					
 					
 					
-					opCode = opCode.substring("oc: ".length(), opCode.length());
+					
+					try {
+						opCode = opCode.substring("oc: ".length(), opCode.length());
+					} catch(StringIndexOutOfBoundsException e) {
+						opCode = "";
+					}
 					
 					// Checking if the System Operator Code is right
 					if(opCode.length() == code.length()) {
@@ -183,6 +198,7 @@ public class Server {
 								String msg;
 								while(true) {
 									// Formatting the message and broadcasting it to all online users
+									sock.setSoTimeout(100000);
 									msg = "["+new SimpleDateFormat("mm:ss").format(new Date())+"] "+newUser.getPrefix()+newUser.getName()+newUser.getSuffix()+" >> "+
 											newUser.getBufferedReader().readLine();
 									System.out.println(msg);
