@@ -1,5 +1,6 @@
 <h1 align="center">Chat Room</h1>
 
+<p align="center">
 ####################
 #     CHATROOM     #
 ####################
@@ -36,3 +37,4 @@ customize things, but also the Server Operators, Developers, and System Operator
 * When you join a room that has an already in use name, you are renamed.
 * When someone joins with a name that includes a space, then it will will make your name into
 your previous name minus the parts after the first space.
+</p>
