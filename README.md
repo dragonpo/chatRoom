@@ -1,4 +1,4 @@
-<h1 align="center" border-border=solid >Chat Room</h1>
+<h1 align="center" border-border=solid border-color="red">Chat Room</h1>
 
 ####################
 #     CHATROOM     #
