@@ -48,10 +48,11 @@ your previous name minus the parts after the first space.
 ##################
 # New Idea Hints #
 ##################
-'''Java
+
+```java
 for(User currentUser: Server.getAllUsers()) {
      if(currentUser.getRoom().equals(user.getRoom()) && currentUser.getSubroom().equals(user.getSubroom())) {
           currentUser.broadcast(Msg);
      }
 }
-'''
+```
