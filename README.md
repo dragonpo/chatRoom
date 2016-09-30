@@ -20,6 +20,13 @@ customize things, but also the Server Operators, Developers, and System Operator
 * More Connection Packet Features
 * Plugin System
 * Config File System IN PROGRESS
+* Photo System
+* Server Console Commands
+* Encryption
+* More Anti-Bot Protection
+* Indef Rooms
+* Def Rooms
+
 
 ###########
 # Ranking #
