@@ -44,3 +44,14 @@ your previous name minus the parts after the first space.
 * Email: fusiondubstepz@gmail.com
 * Facebook: https://www.facebook.com/noah.byrge.3
 * Google Plus; https://plus.google.com/101541588713030258025
+
+##################
+# New Idea Hints #
+##################
+'''Java
+for(User currentUser: Server.getAllUsers()) {
+     if(currentUser.getRoom().equals(user.getRoom()) && currentUser.getSubroom().equals(user.getSubroom())) {
+          currentUser.broadcast(Msg);
+     }
+}
+'''
