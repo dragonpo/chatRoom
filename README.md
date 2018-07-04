@@ -41,7 +41,7 @@ customize things, but also the Server Operators, Developers, and System Operator
 
 * When a System Operator joins a room that is empty they are not made a room operator.
 * When you join a room that has an already in use name, you are renamed.
-* When someone joins with a name that includes a space, then it will will make your name into
+* When someone joins with a name that includes a space, then it will make your name into
 your previous name minus the parts after the first space.
 
 #########################################
